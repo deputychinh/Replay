@@ -1,0 +1,39 @@
+@layer components {
+  .empty-state {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-7) var(--space-5);
+    text-align: center;
+  }
+
+  .empty-state__title {
+    font-weight: var(--weight-semibold);
+  }
+
+  .empty-state__hint {
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
+  }
+
+  .empty-state__spinner {
+    width: 1.5rem;
+    height: 1.5rem;
+    border: 2px solid var(--color-border-strong);
+    border-top-color: var(--color-primary);
+    border-radius: 50%;
+    animation: empty-state-spin 0.8s linear infinite;
+  }
+
+  .empty-state--error .empty-state__title {
+    color: var(--color-danger);
+  }
+
+  @keyframes empty-state-spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+}

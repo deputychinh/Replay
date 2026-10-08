@@ -1,0 +1,25 @@
+@layer components {
+  .avatar {
+    display: inline-grid;
+    flex-shrink: 0;
+    place-items: center;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    background: var(--color-surface-muted);
+    color: var(--color-text-muted);
+    font-size: var(--text-xs);
+    font-weight: var(--weight-semibold);
+  }
+
+  .avatar--staff {
+    background: var(--color-primary-soft);
+    color: var(--color-primary);
+  }
+
+  .avatar--small {
+    width: 1.5rem;
+    height: 1.5rem;
+    font-size: 0.625rem;
+  }
+}

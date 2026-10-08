@@ -1,0 +1,111 @@
+@layer pages {
+  .dashboard {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-5);
+    max-width: var(--content-max);
+    padding: var(--space-6) var(--space-5);
+  }
+
+  .dashboard__title {
+    font-size: var(--text-xl);
+  }
+
+  .dashboard__kpis,
+  .dashboard__grid {
+    display: grid;
+    gap: var(--space-4);
+    grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  }
+
+  .dashboard__grid {
+    grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+  }
+
+  .dashboard__kpi,
+  .dashboard__card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    padding: var(--space-4) var(--space-5);
+    border: var(--border-width) solid var(--color-border);
+    border-radius: var(--radius-lg);
+    background: var(--color-surface);
+    box-shadow: var(--shadow-card);
+  }
+
+  .dashboard__kpi--alert {
+    border-top: 3px solid var(--color-accent);
+  }
+
+  .dashboard__card--wide {
+    grid-column: 1 / -1;
+  }
+
+  .dashboard__label {
+    color: var(--color-text-muted);
+    font-size: var(--text-xs);
+    font-weight: var(--weight-semibold);
+    letter-spacing: var(--tracking-caps);
+    text-transform: uppercase;
+  }
+
+  .dashboard__value {
+    font-size: var(--text-2xl);
+    font-weight: var(--weight-bold);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .dashboard__muted {
+    color: var(--color-text-muted);
+    font-size: var(--text-xs);
+  }
+
+  .dashboard__heading {
+    font-size: var(--text-sm);
+  }
+
+  .dashboard__chart {
+    width: 100%;
+    height: 9rem;
+  }
+
+  .dashboard__bar {
+    fill: var(--color-primary);
+  }
+
+  .dashboard__bars {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    margin: 0;
+  }
+
+  .dashboard__row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: var(--space-3);
+    align-items: center;
+    font-size: var(--text-sm);
+  }
+
+  .dashboard__row:has(.dashboard__meter) {
+    grid-template-columns: 9rem 1fr 2rem;
+  }
+
+  .dashboard__meter {
+    width: 100%;
+    height: 0.5rem;
+  }
+
+  .dashboard__export {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    align-items: flex-end;
+  }
+
+  .dashboard__download {
+    font-weight: var(--weight-semibold);
+  }
+}

@@ -1,0 +1,107 @@
+@layer pages {
+  .composer {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    padding: var(--space-3);
+    border: var(--border-width) solid var(--color-border-strong);
+    border-radius: var(--radius-lg);
+    background: var(--color-surface);
+  }
+
+  .composer:focus-within {
+    border-color: var(--color-primary);
+    box-shadow: var(--ring);
+  }
+
+  .composer--note {
+    border-style: dashed;
+    background: var(--color-warning-soft);
+  }
+
+  .composer__tabs {
+    display: flex;
+    gap: var(--space-1);
+    align-items: center;
+  }
+
+  .composer__tab {
+    padding: var(--space-1) var(--space-3);
+    border: 0;
+    border-radius: var(--radius-sm);
+    background: none;
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
+    font-weight: var(--weight-medium);
+    cursor: pointer;
+  }
+
+  .composer__tab[aria-selected='true'] {
+    background: var(--color-surface-muted);
+    color: var(--color-text);
+  }
+
+  .composer__canned,
+  .composer__status {
+    padding: var(--space-1) var(--space-2);
+    border: var(--border-width) solid var(--color-border);
+    border-radius: var(--radius-sm);
+    background: var(--color-surface);
+    font-size: var(--text-xs);
+  }
+
+  .composer__canned {
+    margin-left: auto;
+  }
+
+  .composer__label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+
+  .composer__input {
+    min-height: 5rem;
+    padding: var(--space-2);
+    border: 0;
+    background: transparent;
+    font-size: var(--text-sm);
+    resize: vertical;
+  }
+
+  .composer__input:focus {
+    outline: none;
+  }
+
+  .composer__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    align-items: center;
+  }
+
+  .composer__attach {
+    color: var(--color-primary);
+    font-size: var(--text-xs);
+    font-weight: var(--weight-medium);
+    cursor: pointer;
+  }
+
+  .composer__file {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+  }
+
+  .composer__files {
+    color: var(--color-text-muted);
+    font-size: var(--text-xs);
+  }
+
+  .composer__spacer {
+    flex: 1;
+  }
+}

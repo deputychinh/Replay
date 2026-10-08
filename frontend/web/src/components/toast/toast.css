@@ -1,0 +1,25 @@
+@layer components {
+  .toast {
+    position: fixed;
+    right: var(--space-4);
+    bottom: var(--space-4);
+    z-index: var(--z-toast);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    width: min(22rem, calc(100vw - 2 * var(--space-4)));
+  }
+
+  .toast__item {
+    padding: var(--space-3) var(--space-4);
+    border-left: 3px solid var(--color-success);
+    border-radius: var(--radius-md);
+    background: var(--color-sidebar);
+    color: var(--color-text-inverse);
+    font-size: var(--text-sm);
+    box-shadow: var(--shadow-raised);
+  }
+
+  .toast__item--error { border-left-color: var(--color-danger); }
+  .toast__item--info { border-left-color: var(--color-sidebar-active); }
+}

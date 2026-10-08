@@ -1,0 +1,61 @@
+@layer components {
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    min-width: 0;
+  }
+
+  .field__label {
+    font-size: var(--text-sm);
+    font-weight: var(--weight-medium);
+  }
+
+  .field__label--hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+
+  .field__control {
+    width: 100%;
+    min-height: var(--control-height);
+    padding: var(--space-2) var(--space-3);
+    border: var(--border-width) solid var(--color-border-strong);
+    border-radius: var(--radius-md);
+    background: var(--color-surface);
+    font-size: var(--text-sm);
+  }
+
+  .field__control:focus {
+    border-color: var(--color-primary);
+    outline: none;
+    box-shadow: var(--ring);
+  }
+
+  .field__control--area {
+    min-height: 7rem;
+    resize: vertical;
+  }
+
+  .field__control--select {
+    cursor: pointer;
+  }
+
+  .field__hint {
+    color: var(--color-text-muted);
+    font-size: var(--text-xs);
+  }
+
+  .field__error {
+    color: var(--color-danger);
+    font-size: var(--text-xs);
+    font-weight: var(--weight-medium);
+  }
+
+  .field--invalid .field__control {
+    border-color: var(--color-danger);
+  }
+}
