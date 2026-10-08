@@ -1,0 +1,130 @@
+/*
+ * Relay design tokens — the ONLY file with raw colours (Stylelint enforces it).
+ * Level 1: palette (--brand-*). Level 2: semantic tokens components use.
+ * Text contrast pairs pass WCAG AA (docs/plan.md §9).
+ */
+@layer tokens {
+  :root {
+    /* Palette */
+    --brand-ink-900: #111827;
+    --brand-gray-600: #4b5563;
+    --brand-gray-400: #9ca3af;
+    --brand-gray-300: #d1d5db;
+    --brand-gray-200: #e5e7eb;
+    --brand-gray-100: #f3f4f6;
+    --brand-bg: #f7f8fa;
+    --brand-white: #fff;
+    --brand-slate-900: #0f172a;
+    --brand-slate-800: #1e293b;
+    --brand-slate-700: #334155;
+    --brand-slate-300: #cbd5e1;
+    --brand-indigo-800: #312e81;
+    --brand-indigo-700: #3730a3;
+    --brand-indigo-600: #4338ca;
+    --brand-indigo-300: #a5b4fc;
+    --brand-indigo-100: #e0e7ff;
+    --brand-indigo-50: #eef2ff;
+    --brand-signal-700: #c2410c;
+    --brand-signal-100: #ffedd5;
+    --brand-green-700: #15803d;
+    --brand-green-100: #dcfce7;
+    --brand-amber-700: #a16207;
+    --brand-amber-100: #fef3c7;
+    --brand-red-700: #b91c1c;
+    --brand-red-100: #fee2e2;
+    --brand-sky-700: #0369a1;
+    --brand-sky-100: #e0f2fe;
+    --brand-shadow: 15 23 42;
+
+    /* Semantic */
+    --color-bg: var(--brand-bg);
+    --color-surface: var(--brand-white);
+    --color-surface-muted: var(--brand-gray-100);
+    --color-text: var(--brand-ink-900);
+    --color-text-muted: var(--brand-gray-600);
+    --color-text-inverse: var(--brand-white);
+    --color-border: var(--brand-gray-200);
+    --color-border-strong: var(--brand-gray-300);
+    --color-primary: var(--brand-indigo-700);
+    --color-primary-hover: var(--brand-indigo-600);
+    --color-primary-active: var(--brand-indigo-800);
+    --color-primary-soft: var(--brand-indigo-100);
+    --color-primary-softer: var(--brand-indigo-50);
+    --color-accent: var(--brand-signal-700);
+    --color-accent-soft: var(--brand-signal-100);
+    --color-focus: var(--brand-indigo-600);
+    --color-success: var(--brand-green-700);
+    --color-success-soft: var(--brand-green-100);
+    --color-warning: var(--brand-amber-700);
+    --color-warning-soft: var(--brand-amber-100);
+    --color-danger: var(--brand-red-700);
+    --color-danger-soft: var(--brand-red-100);
+    --color-info: var(--brand-sky-700);
+    --color-info-soft: var(--brand-sky-100);
+    --color-sidebar: var(--brand-slate-900);
+    --color-sidebar-hover: var(--brand-slate-800);
+    --color-sidebar-border: var(--brand-slate-700);
+    --color-sidebar-text: var(--brand-slate-300);
+    --color-sidebar-active: var(--brand-indigo-300);
+    --color-placeholder: var(--brand-gray-400);
+    --color-overlay: rgb(var(--brand-shadow) / 45%);
+
+    /* Status and priority pairs (used only by the badge block) */
+    --color-status-new: var(--color-info);
+    --color-status-new-soft: var(--color-info-soft);
+    --color-status-open: var(--color-primary);
+    --color-status-open-soft: var(--color-primary-soft);
+    --color-status-waiting: var(--color-warning);
+    --color-status-waiting-soft: var(--color-warning-soft);
+    --color-status-done: var(--color-success);
+    --color-status-done-soft: var(--color-success-soft);
+    --color-status-closed: var(--color-text-muted);
+    --color-status-closed-soft: var(--color-surface-muted);
+
+    /* Type */
+    --font-sans: 'Inter Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', menlo, monospace;
+    --text-xs: 0.75rem;
+    --text-sm: 0.8125rem;
+    --text-base: 0.9375rem;
+    --text-md: 1.0625rem;
+    --text-lg: 1.25rem;
+    --text-xl: 1.5rem;
+    --text-2xl: 2rem;
+    --weight-regular: 400;
+    --weight-medium: 500;
+    --weight-semibold: 600;
+    --weight-bold: 700;
+    --leading-tight: 1.2;
+    --leading-normal: 1.5;
+    --tracking-caps: 0.06em;
+
+    /* Space and shape */
+    --space-1: 0.25rem;
+    --space-2: 0.5rem;
+    --space-3: 0.75rem;
+    --space-4: 1rem;
+    --space-5: 1.5rem;
+    --space-6: 2rem;
+    --space-7: 3rem;
+    --radius-sm: 4px;
+    --radius-md: 6px;
+    --radius-lg: 10px;
+    --radius-pill: 999px;
+    --border-width: 1px;
+    --control-height: 2.25rem;
+    --control-height-sm: 1.875rem;
+    --sidebar-width: 15rem;
+    --list-width: 26rem;
+    --content-max: 72rem;
+    --shadow-card: 0 1px 2px rgb(var(--brand-shadow) / 6%);
+    --shadow-raised: 0 4px 12px rgb(var(--brand-shadow) / 10%), 0 20px 40px rgb(var(--brand-shadow) / 12%);
+    --ring: 0 0 0 3px var(--color-primary-soft);
+    --ring-danger: 0 0 0 3px var(--color-danger-soft);
+    --duration-fast: 120ms;
+    --ease: cubic-bezier(0.2, 0, 0, 1);
+    --z-sticky: 10;
+    --z-overlay: 50;
+    --z-toast: 60;
+  }
+}
