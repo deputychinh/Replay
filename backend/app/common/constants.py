@@ -1,0 +1,53 @@
+"""Every limit, TTL and default in Relay. Change a number here, nowhere else."""
+
+API_PREFIX = "/api/v1"
+
+# Auth
+ACCESS_TOKEN_TTL_MINUTES = 15
+REFRESH_TOKEN_TTL_DAYS = 14
+REFRESH_COOKIE_NAME = "relay_refresh"
+REFRESH_COOKIE_PATH = f"{API_PREFIX}/auth"
+PASSWORD_MIN_LENGTH = 8
+
+# Lists
+PAGE_SIZE_DEFAULT = 25
+PAGE_SIZE_MAX = 100
+SEARCH_MAX_LENGTH = 100
+
+# Tickets
+SUBJECT_MAX_LENGTH = 200
+BODY_MAX_LENGTH = 20_000
+TAGS_MAX = 10
+BULK_UPDATE_MAX = 100
+AUTO_CLOSE_AFTER_SOLVED_DAYS = 4
+
+# SLA
+SLA_WARNING_MINUTES = 30
+SLA_SCAN_INTERVAL_SECONDS = 60
+BREACHING_SOON_HOURS = 4
+AUTO_CLOSE_INTERVAL_SECONDS = 3600
+DEFAULT_TIMEZONE = "America/New_York"
+
+# Files (S3 presigned)
+UPLOAD_MAX_BYTES = 25 * 1024 * 1024
+UPLOAD_URL_TTL_SECONDS = 300
+DOWNLOAD_URL_TTL_SECONDS = 300
+ALLOWED_UPLOAD_TYPES = frozenset(
+    {"image/png", "image/jpeg", "image/gif", "application/pdf", "text/plain", "text/csv", "application/zip"}
+)
+EXPORT_MAX_DAYS = 366
+
+# Rate limits: (requests, window seconds)
+LOGIN_RATE_LIMIT = (10, 60)
+WRITE_RATE_LIMIT = (120, 60)
+
+# Cache
+DASHBOARD_CACHE_TTL_SECONDS = 30
+
+# Real time
+WS_HEARTBEAT_SECONDS = 25
+EVENTS_CHANNEL = "relay:events"
+
+# Worker
+QUEUE_WAIT_SECONDS = 10
+QUEUE_BATCH_SIZE = 10
