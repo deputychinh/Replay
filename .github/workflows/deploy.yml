@@ -1,0 +1,56 @@
+name: Deploy
+
+# main → staging automatically; a v* tag → production after approval.
+# Uses GitHub OIDC (no stored AWS keys). Skipped until AWS_ROLE_ARN is configured.
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  deploy:
+    if: vars.AWS_ROLE_ARN != ''
+    runs-on: ubuntu-latest
+    environment: ${{ startsWith(github.ref, 'refs/tags/v') && 'production' || 'staging' }}
+    env:
+      STAGE: ${{ startsWith(github.ref, 'refs/tags/v') && 'prod' || 'staging' }}
+      AWS_REGION: us-east-1
+    steps:
+      - uses: actions/checkout@v4
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ vars.AWS_ROLE_ARN }}
+          aws-region: us-east-1
+      - uses: astral-sh/setup-uv@v5
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Build and push the backend image
+        id: image
+        run: |
+          REPO=$(aws ssm get-parameter --name /relay/$STAGE/ecr-repo --query Parameter.Value --output text)
+          aws ecr get-login-password | docker login --username AWS --password-stdin "${REPO%%/*}"
+          docker build -t "$REPO:${GITHUB_SHA::7}" backend
+          docker push "$REPO:${GITHUB_SHA::7}"
+          echo "tag=${GITHUB_SHA::7}" >> "$GITHUB_OUTPUT"
+      - name: Deploy infrastructure and services (each API task runs migrations in an init container, advisory-locked)
+        working-directory: infra/cdk
+        run: |
+          uv sync --frozen
+          npx --yes aws-cdk@2 deploy --all --require-approval never -c stage=$STAGE -c imageTag=${{ steps.image.outputs.tag }}
+      - name: Publish the web app
+        run: |
+          cd frontend && npm ci && npm run build
+          BUCKET=$(aws ssm get-parameter --name /relay/$STAGE/web-bucket --query Parameter.Value --output text)
+          DIST=$(aws ssm get-parameter --name /relay/$STAGE/web-distribution --query Parameter.Value --output text)
+          aws s3 sync web/dist/assets "s3://$BUCKET/assets" --cache-control "public,max-age=31536000,immutable"
+          aws s3 cp web/dist/index.html "s3://$BUCKET/index.html" --cache-control "no-cache"
+          aws cloudfront create-invalidation --distribution-id "$DIST" --paths /index.html
+      - name: Smoke test
+        run: |
+          URL=$(aws ssm get-parameter --name /relay/$STAGE/url --query Parameter.Value --output text)
+          curl -fsS "$URL/api/v1/ready"

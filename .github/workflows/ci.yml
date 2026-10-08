@@ -1,0 +1,104 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+      - name: Local AWS stack (Postgres, Redis, LocalStack, Mailpit)
+        run: docker compose up -d --wait postgres redis localstack mailpit
+      - working-directory: backend
+        run: |
+          uv sync --frozen
+          uv run ruff check .
+          uv run ruff format --check .
+          uv run mypy app
+      - name: Migrations apply cleanly
+        working-directory: backend
+        run: uv run alembic upgrade head && uv run alembic check
+      - name: Unit + integration tests
+        working-directory: backend
+        run: uv run pytest --cov=app --cov-report=term --cov-fail-under=85
+      - name: Generated API client is up to date (single source of enums)
+        run: |
+          (cd backend && uv run python -m app.openapi) > frontend/packages/api-client/openapi.json
+          git diff --exit-code frontend/packages/api-client/openapi.json
+
+  frontend:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - run: npm ci
+      - run: npm run gen-client && git diff --exit-code packages/api-client/src
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run build
+
+  e2e:
+    needs: [backend, frontend]
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: docker compose up -d --wait postgres redis localstack mailpit
+      - name: API + worker with demo data
+        working-directory: backend
+        run: |
+          uv sync --frozen
+          uv run alembic upgrade head
+          uv run python -m app.seed
+          nohup uv run uvicorn app.main:app --port 8030 > /tmp/api.log 2>&1 &
+          nohup uv run python -m app.worker --schedule > /tmp/worker.log 2>&1 &
+      - working-directory: frontend
+        run: |
+          npm ci
+          npx playwright install --with-deps chromium
+          npm run e2e
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: e2e-report
+          path: |
+            frontend/playwright-report
+            /tmp/*.log
+
+  infra:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: infra/cdk
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: uv sync --frozen
+      - run: uv run pytest -q
+      - run: npx --yes aws-cdk@2 synth --quiet
