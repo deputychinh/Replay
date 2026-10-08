@@ -1,0 +1,15 @@
+Senior Full Stack Developer - Python, React, AWS, React, Vue
+Posted 2 days ago
+Worldwide
+
+Summary
+We're seeking a senior full stack developer to build and maintain scalable web applications. You'll work on both front-end and back-end development, support application architecture, and help deliver reliable, high-performance solutions. The ideal candidate has strong experience with full-stack development and can contribute to end-to-end project delivery. This is a long-term opportunity for someone who can collaborate effectively and help drive technical decisions.
+Must be available at U.S. timezone. Good english communication is needed.
+Flexible availability is important.
+
+---
+Same standards as the earlier projects (b2b/requirement.txt):
+- plan.md first, approved before coding (reference: real-estate/docs/plan.md, b2b/folio/docs/plan.md)
+- one brand colour set for the whole project, BEM CSS
+- enums / interfaces / constants written in one place and imported; simple util names
+- draw.io architecture + business flow diagrams; production-grade, ready to show clients

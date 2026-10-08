@@ -1,0 +1,63 @@
+# Local stack. AWS services are emulated: LocalStack for SQS + S3, Mailpit for email (SES in AWS).
+# Host ports avoid the usual defaults so Relay runs next to other projects.
+name: relay
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: relay
+      POSTGRES_PASSWORD: relay
+      POSTGRES_DB: relay
+    ports: ["5442:5432"]
+    volumes: [pgdata:/var/lib/postgresql/data]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U relay"]
+      interval: 3s
+      retries: 20
+
+  redis:
+    image: redis:7-alpine
+    ports: ["6389:6379"]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 3s
+      retries: 20
+
+  localstack:
+    image: localstack/localstack:3.8
+    environment:
+      SERVICES: sqs,s3
+      AWS_DEFAULT_REGION: us-east-1
+    ports: ["4566:4566"]
+    volumes: ["./infra/localstack/init:/etc/localstack/init/ready.d:ro"]
+    healthcheck:
+      test: ["CMD-SHELL", "awslocal sqs list-queues | grep -q relay-jobs"]
+      interval: 3s
+      retries: 40
+
+  mailpit:
+    image: axllent/mailpit:v1.21
+    ports: ["1026:1025", "8026:8025"]
+
+  api:
+    build: ./backend
+    command: ["sh", "-c", "alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port 8000 --proxy-headers"]
+    env_file: .env.docker
+    ports: ["8020:8000"]
+    depends_on:
+      postgres: { condition: service_healthy }
+      redis: { condition: service_healthy }
+      localstack: { condition: service_healthy }
+    profiles: [full]
+
+  worker:
+    build: ./backend
+    command: ["python", "-m", "app.worker"]
+    env_file: .env.docker
+    depends_on:
+      api: { condition: service_started }
+    profiles: [full]
+
+volumes:
+  pgdata:
